@@ -6,7 +6,8 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import GoogleIcon from '@mui/icons-material/Google';
+import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import * as React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { auth } from '../config/firebase';
@@ -29,6 +30,18 @@ const Login = () => {
             setErrorMessage(error.message);
         }
     };
+
+    const signInWithGoogle = async (event) => {
+        event.preventDefault();
+        const provider = new GoogleAuthProvider();
+
+        try {
+            await signInWithPopup(auth, provider);
+            navigate("/");
+        } catch (error) {
+            setErrorMessage(error.message);
+        }
+    }
 
     return (
         <ThemeProvider theme={theme}>
@@ -93,6 +106,14 @@ const Login = () => {
                         sx={{ mt: 3, mb: 2 }}
                     >
                         Sign In
+                    </Button>
+                    
+                    <Button variant="contained" color="success" startIcon={<GoogleIcon />}
+                        onClick={signInWithGoogle}
+                        fullWidth
+                        sx={{ mt: 1, mb: 2 }}
+                    >
+                        Sign In with Google
                     </Button>
                     <Grid container>
                         <Grid item>

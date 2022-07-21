@@ -1,47 +1,37 @@
 import { Box, Card, Container, Grid, Paper, Rating, ThemeProvider, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
-import axios from 'axios';
 import { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
 import ResponsiveBar from "../components/ResponsiveBar";
 import theme from "../themes/themes";
 import Layout from "./Layout";
 import Footer from "../components/Footer";
+import tmdbapi from "../api/tmdbapi";
 
-
-const API_KEY = '02b6eac65609034138be6a8c25c0a7ca';
-const baseUrl = 'https://api.themoviedb.org/3/';
 const BASE_IMAGE_URL = "https://image.tmdb.org/t/p/original";
 
 function MovieSearch() {
         const params = useParams();
         const [loading, setLoading] = useState(false);
         const [movieSearch, setSearchMovie] = useState([]);
+        const key = params?.key ;
+        const url = 'search/movie?query=' + key;
 
-        const getMovieSearh = async (key) => {
-                setLoading(true);
-                try {
-                        const fetchedMovies = await axios.get(baseUrl + 'search/movie', {
-                                params: {
-                                        api_key: API_KEY,
-                                        language: 'en-US',
-                                        query: key,
-                                        page: 1,
-                                        include_adult: false,
-                                }
-                        });
-                        setSearchMovie(fetchedMovies.data.results);
-                } catch (error) {
-                        console.log(error)
-                } finally {
-                        setLoading(false);
+        useEffect(() => {
+                const getMovieSearh = async () => {
+                        try {
+                                const fetchedMovies = await tmdbapi.get(url);
+                                console.log(fetchedMovies);
+                                setSearchMovie(fetchedMovies.data.results);
+                                setLoading(false);
+                        } catch (error) {
+                                console.log(error);
+                        }
                 }
-        }
 
-  useEffect(() => {
-    getMovieSearh(params.key);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+                getMovieSearh();
+        }, [url]);
+
   return (
     <>
         <ThemeProvider theme={theme}>
@@ -75,10 +65,13 @@ function MovieSearch() {
                           justifyContent: 'center',
                           alignItems: 'center',
                         }}>
-                          <Typography fontSize={16} fontWeight='bold' sx={{ textAlign: 'center' }}>{movie.title}</Typography>
+                          <Typography fontSize={16} fontWeight='bold' sx={{ textAlign: 'center' }}>Watch Now</Typography>
                         </Box>
                       </Card>
                     </Link>
+                        <Typography variant="subtitle1" color="white" component="div">
+                        {movie.title}
+                        </Typography>
                         <Typography variant="subtitle1" color="white" component="div">
                         {new Date(movie.release_date).getFullYear()}
                         </Typography>
