@@ -32,6 +32,10 @@ root.render(
           </ProtectedRoute>
         } />
         <Route path='search/:key' element={<MovieSearch />} />
+        <Route path='series' element={<App />} />
+        <Route path='movies' element={<App />} />
+        <Route path='trend' element={<App />} />
+        <Route path='mylist' element={<App />} />
         <Route path='moviedetail/:id' element={
           <ProtectedRoute>
             <MovieDetail />
