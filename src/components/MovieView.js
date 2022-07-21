@@ -20,6 +20,7 @@ const MovieView = () => {
 
         useEffect(() => {
                 getMoviesView(params.id);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [params.id]);
 
         return (
